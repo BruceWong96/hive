@@ -398,7 +398,7 @@ public class HiveStatement implements java.sql.Statement {
     LOG.debug("Waiting on operation to complete: Polling operation status");
 
     // Poll on the operation status, till the operation is complete
-    do {
+    while (!isOperationComplete) {
       try {
         if (Thread.currentThread().isInterrupted()) {
           throw new SQLException(CLIENT_POLLING_OPSTATUS_INTERRUPTED.getMsg(),
@@ -448,7 +448,7 @@ public class HiveStatement implements java.sql.Statement {
         isLogBeingGenerated = false;
         throw new SQLException("Failed to wait for operation to complete", "08S01", e);
       }
-    } while (!isOperationComplete);
+    }
 
     // set progress bar to be completed when hive query execution has completed
     if (inPlaceUpdateStream.isPresent()) {
